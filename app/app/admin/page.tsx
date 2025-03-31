@@ -1,3 +1,3 @@
 export default function Admin() {
-    return <h1>Hello Next.js!</h1>
+    return <h1>Admin Page</h1>
   }

@@ -1,3 +1,3 @@
 export default function Shop() {
-    return <h1>Hello Next.js!</h1>
+    return <h1>Shop Page</h1>
   }
