@@ -6,9 +6,11 @@ export default function ShopLayout({
     children: React.ReactNode
   }) {
     return (
-     <>
+     <div>
          <Header />
-        {children}
-     </>
+         <div className="mx-auto max-w-7xl items-center justify-between p-6 lg:px-8">
+             {children}
+         </div>
+     </div>
     )
   }
