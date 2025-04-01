@@ -34,6 +34,7 @@ model Customer {
   full_name   String
   email       String   @unique
   phone       String?
+  password    String?
   address     String?
   created_at  DateTime @default(now())
   orders      Order[]
