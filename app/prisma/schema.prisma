@@ -1,0 +1,107 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  category_id Int      @id @default(autoincrement())
+  name        String
+  description String?
+  products    Product[]
+}
+
+model Product {
+  product_id     Int       @id @default(autoincrement())
+  name           String
+  description    String?
+  price          Decimal
+  stock_quantity Int
+  image_url      String?
+  created_at     DateTime  @default(now())
+  category       Category? @relation(fields: [category_id], references: [category_id])
+  category_id    Int?
+  orderItems     OrderItem[]
+  productSuppliers ProductSupplier[]
+}
+
+model Customer {
+  customer_id Int      @id @default(autoincrement())
+  full_name   String
+  email       String   @unique
+  phone       String?
+  address     String?
+  created_at  DateTime @default(now())
+  orders      Order[]
+}
+
+model Order {
+  order_id     Int        @id @default(autoincrement())
+  order_date   DateTime   @default(now())
+  status       OrderStatus @default(pending)
+  total_amount Decimal
+  customer     Customer   @relation(fields: [customer_id], references: [customer_id])
+  customer_id  Int
+  orderItems   OrderItem[]
+  payments     Payment[]
+}
+
+model OrderItem {
+  order_item_id Int     @id @default(autoincrement())
+  quantity      Int
+  price         Decimal
+  order         Order   @relation(fields: [order_id], references: [order_id])
+  order_id      Int
+  product       Product @relation(fields: [product_id], references: [product_id])
+  product_id    Int
+}
+
+model Payment {
+  payment_id     Int          @id @default(autoincrement())
+  payment_date   DateTime     @default(now())
+  amount         Decimal
+  payment_method PaymentMethod
+  payment_status PaymentStatus @default(pending)
+  order          Order        @relation(fields: [order_id], references: [order_id])
+  order_id       Int
+}
+
+model Supplier {
+  supplier_id      Int               @id @default(autoincrement())
+  name             String
+  contact_info     String?
+  productSuppliers ProductSupplier[]
+}
+
+model ProductSupplier {
+  product   Product  @relation(fields: [product_id], references: [product_id])
+  product_id Int
+  supplier  Supplier @relation(fields: [supplier_id], references: [supplier_id])
+  supplier_id Int
+
+  @@id([product_id, supplier_id])
+}
+
+enum OrderStatus {
+  pending
+  shipped
+  delivered
+  cancelled
+}
+
+enum PaymentMethod {
+  credit_card
+  paypal
+  bank_transfer
+  cash
+}
+
+enum PaymentStatus {
+  pending
+  completed
+  failed
+}
